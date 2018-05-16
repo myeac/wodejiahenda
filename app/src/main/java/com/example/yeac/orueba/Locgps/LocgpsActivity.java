@@ -22,11 +22,12 @@ import butterknife.BindView;
 
 public class LocgpsActivity extends AppCompatActivity {
 
-    Location mLocation;
+    Location mLocInicial;
     LocationManager mLocationManager;
     LocListener mLocationListener;
     ArrayList<Location> mListLocation;
 
+    @BindView(R.id.tvPrimera) TextView tvPosPrimera;
     @BindView(R.id.tvInicial) TextView tvPosInicial;
     @BindView(R.id.tvfinal) TextView tvPosFinal;
     @BindView(R.id.tvDistancia) TextView tvDistancia;
@@ -38,24 +39,18 @@ public class LocgpsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locgps);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             return;
 
-        localizacionActual();
-
+        //obtener posicion incial
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER      //proveedor
-                , 1000          //Miliseconds
-                , 10         //Meters
-                , mLocationListener);   //Listener
+        mLocationListener = new LocListener(this,tvPosInicial,tvPosFinal,mLocationManager);
+        mLocInicial = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        tvPosPrimera.setText(mLocInicial.getLatitude() + " , " + mLocInicial.getLongitude());
 
-    }
+        //servicio de actualizacion de posicion: posinicial y posfinal
 
-    public void localizacionActual() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            return;
-
-        Location enviar = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
 
     }
 
