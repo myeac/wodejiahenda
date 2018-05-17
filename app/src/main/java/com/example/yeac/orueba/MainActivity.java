@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int PERMISSION_CODE = 10;
 
+
+
     public static String[] listPermisos = new String[]{
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -39,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Toast.makeText(this,"Permisos Brindados",Toast.LENGTH_SHORT).show();
     }
-
     public boolean hasPermissions(Context context, String... listperm){
         if(context != null && listperm != null){
             for(String permiso: listperm){

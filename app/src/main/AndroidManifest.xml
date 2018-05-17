@@ -14,6 +14,7 @@
     <uses-feature
         android:name="android.hardware.fingerprint"
         android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps"/>
 
     <application
         android:allowBackup="true"
@@ -31,6 +32,9 @@
         </activity>
         <activity android:name=".Huella.HuellaActivity" />
         <activity android:name=".Locgps.LocgpsActivity"></activity>
+
+        <service android:name=".Locgps.LocListener"/>
+
     </application>
 
 </manifest>
