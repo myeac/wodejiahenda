@@ -1,28 +1,20 @@
 package com.example.yeac.orueba.Locgps;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Service;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
+import java.util.List;
 
 public class LocListener extends Service implements LocationListener{
 
@@ -32,9 +24,10 @@ public class LocListener extends Service implements LocationListener{
     //https://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
     LocationManager mLocMan;
-    Location mLocationActual;
+    Location mLocInicial,mLocFinal;
     Activity mActivity;
     TextView tvInicio,tvFinal,tvVelocidad,tvTiempo;
+    List<Location> listaLocation;
 
 
     private IBinder binder = new LocalBinder();
@@ -44,20 +37,21 @@ public class LocListener extends Service implements LocationListener{
         }
     }
 
-    public String enviarLocation(){
-        if(mLocationActual != null)
-            return String.valueOf(mLocationActual.getLatitude()) + " , " + String.valueOf(mLocationActual.getLongitude());
-        else
-            return "error null";
-    }
     public void setActivityLayout(Activity pactivity){
         this.mActivity = pactivity;
     }
-    public void actualziarUI(){
+    public String actualizarPosicion(Location location){
+        if(location != null)
+            return String.valueOf(location.getLatitude()) + " , " + String.valueOf(location.getLongitude());
+        else
+            return "error null";
+    }
+    public void actualizarPosicionUI(){
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tvFinal.setText(enviarLocation());
+                tvInicio.setText(actualizarPosicion(mLocInicial));
+                tvFinal.setText(actualizarPosicion(mLocFinal));
             }
         });
     }
@@ -73,15 +67,17 @@ public class LocListener extends Service implements LocationListener{
     @SuppressLint("MissingPermission")
     @Override
     public void onCreate() {
+        listaLocation = new ArrayList<>();
         mLocMan = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
-        mLocationActual = mLocMan.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        mLocFinal = mLocMan.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         mLocMan.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER
-                                        ,10,0,this);
+                                        ,1000,10,this);
     }
     @Override
     public void onDestroy() {
         stopSelf();
     }
+
 
     //service
     @Nullable
@@ -98,8 +94,10 @@ public class LocListener extends Service implements LocationListener{
     //LocationListener
     @Override
     public void onLocationChanged(Location location) {
-        this.mLocationActual = location;
-        actualziarUI();
+        mLocInicial = new Location(mLocFinal);
+        mLocFinal = location;
+        listaLocation.add(mLocFinal);
+        actualizarPosicionUI();
     }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
