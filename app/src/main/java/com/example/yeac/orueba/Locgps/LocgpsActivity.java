@@ -58,7 +58,7 @@ public class LocgpsActivity extends AppCompatActivity {
         //obtener posicion incial
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mLocInicial = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-        tvPosPrimera.setText(mLocInicial.getLatitude() + " , " + mLocInicial.getLongitude());
+        tvPosPrimera.setText(LocListener.actualizarPosicion(mLocInicial));
 
         //servicio de actualizacion de posicion: posinicial y posfinal
         mServiceConn = new ServiceConnection() {
@@ -66,7 +66,7 @@ public class LocgpsActivity extends AppCompatActivity {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mService = ((LocListener.LocalBinder) service).getService();
                 mService.setActivityLayout(LocgpsActivity.this);
-                mService.setLayoutToUpdate(tvPosInicial,tvPosFinal,tvVelocidad,tvTiempo);
+                mService.setLayoutToUpdate(tvPosInicial,tvPosFinal,tvVelocidad,tvTiempo,tvDistancia);
 //                Thread t = new Thread() {
 //                    @Override
 //                    public void run() {
