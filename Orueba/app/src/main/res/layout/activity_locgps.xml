@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".Locgps.LocgpsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <Chronometer
+            android:id="@+id/chroReloj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estado del Objeto:"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dato" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Primera Posicion"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvPrimera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dato" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pos Inicial (lat , long)"
+            android:textStyle="bold" />
+        <TextView
+                android:id="@+id/tvInicial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dato" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pos Final (lat , long)"
+            android:textStyle="bold" />
+        <TextView
+                android:id="@+id/tvfinal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dato" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Velocidad actual (m/s)"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvVelocidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dato" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tiempo"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvTiempo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dato" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distancia Recorrida (m)"
+            android:textStyle="bold" />
+        <TextView
+                android:id="@+id/tvDistancia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dato" />
+
+
+
+    </LinearLayout>
+
+</ScrollView>
