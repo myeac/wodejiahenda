@@ -32,7 +32,6 @@ import butterknife.ButterKnife;
 
 public class LocgpsActivity extends AppCompatActivity {
 
-
     @BindView(R.id.tvPrimera) TextView tvPosPrimera;
     @BindView(R.id.tvInicial) TextView tvPosInicial;
     @BindView(R.id.tvfinal) TextView tvPosFinal;

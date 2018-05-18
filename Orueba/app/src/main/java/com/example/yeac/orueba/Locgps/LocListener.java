@@ -30,10 +30,15 @@ import java.util.concurrent.TimeUnit;
 
 public class LocListener extends Service implements LocationListener{
 
-    //https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
-    //https://stackoverflow.com/questions/1513485/how-do-i-get-the-current-gps-location-programmatically-in-android
-    //https://www.dev2qa.com/android-update-ui-from-child-thread-example/
-    //https://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
+    /* https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
+    * https://stackoverflow.com/questions/1513485/how-do-i-get-the-current-gps-location-programmatically-in-android
+    * https://www.dev2qa.com/android-update-ui-from-child-thread-example/
+    * https://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
+    * Accelerometer
+    *   https://examples.javacodegeeks.com/android/core/hardware/sensor/android-accelerometer-example/
+    *   https://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125
+    * */
+
 
     //lcation updates: https://developer.android.com/training/location/receive-location-updates
 
@@ -70,8 +75,6 @@ public class LocListener extends Service implements LocationListener{
     }
 
     //Motion
-
-
     public String calcularVelocidad(){
         return String.valueOf(listaLocation.get(listaLocation.size() - 1).getSpeed());
     }
@@ -143,6 +146,7 @@ public class LocListener extends Service implements LocationListener{
     public void onCreate() {
         listaLocation = new ArrayList<>();
         listaDistancias = new ArrayList<>();
+
         //LOCATION
         mLocMan = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
         mLocFinal = mLocMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -152,14 +156,17 @@ public class LocListener extends Service implements LocationListener{
 
         //MOTION - necesita implementar un triggerlistener,
         mMotion = (SensorManager) getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
-        sMotion = mMotion.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
+        sMotion = mMotion.getDefaultSensor(sMotion.TYPE_SIGNIFICANT_MOTION);
         tlMotion = new TriggerEventListener() {
             @Override
             public void onTrigger(TriggerEvent event) {
                 Log.i("sensor:","Sensor de Momento cambio");
             }
         };
+        mMotion.requestTriggerSensor(tlMotion,sMotion);
+
     }
+
     @Override
     public void onDestroy() {
         mLocMan.removeUpdates(this);
@@ -187,7 +194,6 @@ public class LocListener extends Service implements LocationListener{
         mLocInicial = new Location(mLocFinal);
         mLocFinal = location;
         listaLocation.add(mLocFinal);
-        mMotion.requestTriggerSensor(tlMotion,sMotion);
         actualizarPosicionUI();
     }
     @Override
