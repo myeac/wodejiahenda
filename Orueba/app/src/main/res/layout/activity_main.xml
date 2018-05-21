@@ -28,9 +28,11 @@
         android:text="Localizacion"/>
 
     <Button
-        android:id="@+id/btnapp4"
+        android:id="@+id/btnaccelerometer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:onClick="startAcelerometer"
+        android:text="Accelerometer"/>
 
 
 </LinearLayout>

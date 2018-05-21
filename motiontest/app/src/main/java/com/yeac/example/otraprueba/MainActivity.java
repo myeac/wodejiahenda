@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mListener = new TriggerListener(this);
 
         tv = (TextView) findViewById(R.id.tv);
         tvX = (TextView) findViewById(R.id.tvX);
@@ -37,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         tvZ = (TextView) findViewById(R.id.tvZ);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mSigMotion = mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
+
+        mListener = new TriggerListener(this);
+
     }
 
     @Override

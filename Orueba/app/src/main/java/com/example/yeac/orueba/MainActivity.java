@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.yeac.orueba.Accelerometer.Accelerometer;
+import com.example.yeac.orueba.Accelerometer.AccelerometerActivity;
 import com.example.yeac.orueba.Huella.HuellaActivity;
 import com.example.yeac.orueba.Locgps.LocgpsActivity;
 
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     public void startLocgpsActivity(View view){
         startActivity( new Intent(this, LocgpsActivity.class));
     }
-
+    public void startAcelerometer(View view){
+        startActivity(new Intent(this, AccelerometerActivity.class));
+    }
 }
 

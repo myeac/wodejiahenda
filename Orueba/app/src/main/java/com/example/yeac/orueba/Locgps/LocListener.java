@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.speech.SpeechRecognizer;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.TextView;
@@ -76,7 +77,7 @@ public class LocListener extends Service implements LocationListener{
 
     //Motion
     public String calcularVelocidad(){
-        return String.valueOf(listaLocation.get(listaLocation.size() - 1).getSpeed());
+        return String.valueOf(listaLocation.get(listaLocation.size() - 1).getSpeed()*3600/1000);
     }
 
     //distancias
