@@ -5,34 +5,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.example.yeac.orueba.MainActivity">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvResultados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="result"/>
 
     <Button
-        android:id="@+id/btnPermisos"
+        android:id="@+id/btnEscuchar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Request Permisos"/>
-    <Button
-        android:id="@+id/btnHuella"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="startService"
-        android:text="Huella"/>
-    <Button
-        android:id="@+id/btnLocalizacion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="startLocgpsActivity"
-        android:text="Localizacion"/>
+        android:onClick="comenzarEscuchar"
+        android:text="Hablar"/>
 
-    <Button
-        android:id="@+id/btnaccelerometer"
+    <ProgressBar
+        android:id="@+id/pbTiempo"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="startAcelerometer"
-        android:text="Accelerometer"/>
+        android:max="5000"
+        android:progress="0"/>
 
+    <TextView
+        android:id="@+id/tvTiempo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="restante"
+        android:textStyle="bold"/>
 
 </LinearLayout>

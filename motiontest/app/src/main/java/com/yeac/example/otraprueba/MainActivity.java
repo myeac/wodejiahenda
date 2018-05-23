@@ -15,62 +15,57 @@ import android.widget.Toast;
 /*otros:
     https://stackoverflow.com/questions/29030943/
     https://android.googlesource.com/platform/development/+/master/samples/ApiDemos/src/com/example/android/apis/os/TriggerSensors.java
-
+    example: https://github.com/ysimonx/Android_TYPE_SIGNIFICANT_MOTION
 */
 public class MainActivity extends AppCompatActivity {
-    //example: https://github.com/ysimonx/Android_TYPE_SIGNIFICANT_MOTION
-    private  SensorManager mSensorManager;
-    private  Sensor mSigMotion;
-    private  TriggerEventListener mListener;
-    private TextView tv,tvX,tvY,tvZ;
+    //https://github.com/kesenhoo/AndroidApiDemo/blob/master/app/src/main/java/com/example/android/apis/os/TriggerSensors.java
+
+    SensorManager mSensorManager;
+    Sensor mSigMotion;
+    TriggerListener mListener;
+    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        tv = (TextView) findViewById(R.id.tv);
-        tvX = (TextView) findViewById(R.id.tvX);
-        tvY = (TextView) findViewById(R.id.tvY);
-        tvZ = (TextView) findViewById(R.id.tvZ);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mSigMotion = mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
-
-        mListener = new TriggerListener(this);
-
+        mTextView = (TextView)findViewById(R.id.text);
+        mListener = new TriggerListener(this, mTextView);
+        if (mSigMotion == null) {
+            mTextView.setText("Sensor no disponible");
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mSensorManager != null) {
-            mSensorManager.requestTriggerSensor(mListener, mSigMotion);
-        }
+        if (mSigMotion != null && mSensorManager.requestTriggerSensor(mListener, mSigMotion))
+            mTextView.setText("Esperando");
     }
-
     @Override
     protected void onPause() {
         super.onPause();
-        // Call disable to ensure that the trigger request has been canceled.
-        mSensorManager.cancelTriggerSensor(mListener, mSigMotion);
+        if (mSigMotion != null) mSensorManager.cancelTriggerSensor(mListener, mSigMotion);
     }
 
     class TriggerListener extends TriggerEventListener {
         Context context;
-
-        public TriggerListener(Context pcontext){
+        TextView tvTexto;
+        public TriggerListener(Context pcontext, TextView ptext){
             this.context = pcontext;
-            Toast.makeText(pcontext, "Trigger Creado",Toast.LENGTH_SHORT).show();
+            this.tvTexto = ptext;
         }
-
+        @Override
         public void onTrigger(TriggerEvent event) {
-            Toast.makeText(this.context, "significant motion detected",Toast.LENGTH_SHORT).show();
-            long currentTimeStamp = System.currentTimeMillis();
-            tv.setText("Last movement triggered at "+String.valueOf(currentTimeStamp));
-            tvX.setText(String.valueOf(event.values[0]));
-            tvY.setText(String.valueOf(event.values[1]));
-            tvZ.setText(String.valueOf(event.values[2]));
+            if(event.values[0] == 1){
+                tvTexto.setText("Movimiento");
+                tvTexto.setText("Desactivado");
+            }
+            //sensor se desactiva automaticamente
         }
     }
+
 }

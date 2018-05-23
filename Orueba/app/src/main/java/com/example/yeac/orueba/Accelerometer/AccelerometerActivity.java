@@ -43,7 +43,6 @@ public class AccelerometerActivity extends AppCompatActivity implements SensorEv
 
         mLinearManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mLinearManager.registerListener(this,sLineal,SensorManager.SENSOR_DELAY_NORMAL);
-
     }
 
 

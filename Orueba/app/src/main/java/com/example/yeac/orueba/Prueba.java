@@ -56,31 +56,48 @@ public class Prueba {
         //site resultado: 2.37 km
     }
 
-    void pushNotificationBuilder(Context app){
+    static void pushNotificationBuilder(Context app) {
 
-        long[] pattern = {500, 500, 500, 500, 500};
+        long[] pattern = {100, 500};
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Intent intentRefresh = new Intent("ActionRefresh");
 
         PendingIntent pendingIntent = PendingIntent.getActivity(app.getApplicationContext(), 0, intentRefresh,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(app.getApplicationContext())
+        NotificationCompat.Builder notification =
+                new NotificationCompat.Builder(app,"canal2")
                         .setContentTitle("Titulo")
-                        .setContentText("Contexto")
+                        .setContentText("Texto")
+                        .setContentInfo("informacion")
                         .setAutoCancel(true)
                         .setVibrate(pattern)
                         .setLights(Color.BLUE, 1, 1)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            notificationBuilder.setColor(app.getColor(R.color.colorPrimary));
+            notification.setColor(app.getColor(R.color.colorPrimary));
         }
+        notification.setSmallIcon(R.mipmap.ic_launcher);
         NotificationManager notificationManager = (NotificationManager) app.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(123);
-        notificationManager.notify(123, notificationBuilder.build());
+        notificationManager.notify(123, notification.build());
+
+//        NotificationCompat.Builder notificationBuilder =
+//                new NotificationCompat.Builder(app.getApplicationContext())
+//                        .setContentTitle("Titulo")
+//                        .setContentText("Contexto")
+//                        .setAutoCancel(true)
+//                        .setVibrate(pattern)
+//                        .setLights(Color.BLUE, 1, 1)
+//                        .setSound(defaultSoundUri)
+//                        .setContentIntent(pendingIntent);
+//        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            notification.setColor(app.getColor(R.color.colorPrimary));
+//        }
+//        NotificationManager notificationManager = (NotificationManager) app.getSystemService(Context.NOTIFICATION_SERVICE);
+//        notificationManager.cancel(123);
+//        notificationManager.notify(123, notificationBuilder.build());
     }
 
     //Ejemplo: http://maps.google.com/maps/api/directions/xml?origin=-12.103167,-77.058154&destination=-12.118645,-77.043139&sensor=false&units=metric

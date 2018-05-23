@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -41,8 +42,8 @@ public class LocgpsActivity extends AppCompatActivity {
     @BindView(R.id.chroReloj) Chronometer chroReloj;
 
     Location mLocInicial;
-    LocationManager mLocationManager;
     LocListener mService;
+    LocationManager mLocationManager;
     ServiceConnection mServiceConn;
     Intent mIntentServ;
 
@@ -104,6 +105,13 @@ public class LocgpsActivity extends AppCompatActivity {
         startService(mIntentServ);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(mIntentServ);
+        mLocationManager = null;
+        mLocInicial = null;
+    }
 
     public void actualizarConThread() {
         Thread t = new Thread() {

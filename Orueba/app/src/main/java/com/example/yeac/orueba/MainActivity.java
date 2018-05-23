@@ -11,9 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.yeac.orueba.Accelerometer.Accelerometer;
 import com.example.yeac.orueba.Accelerometer.AccelerometerActivity;
-import com.example.yeac.orueba.Huella.HuellaActivity;
 import com.example.yeac.orueba.Locgps.LocgpsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +22,19 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.INTERNET,
-            Manifest.permission.ACCESS_WIFI_STATE};
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA,
+            Manifest.permission.WAKE_LOCK,
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.BLUETOOTH_PRIVILEGED,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAPTURE_AUDIO_OUTPUT,
+            Manifest.permission.BODY_SENSORS,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.READ_CONTACTS};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +44,14 @@ public class MainActivity extends AppCompatActivity {
         //permisos
         if(!hasPermissions(this,listPermisos))
             ActivityCompat.requestPermissions(this,listPermisos,PERMISSION_CODE);
+
+        Prueba.pushNotificationBuilder(this);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(!hasPermissions(this,listPermisos))
         Toast.makeText(this,"Permisos Brindados",Toast.LENGTH_SHORT).show();
     }
     public boolean hasPermissions(Context context, String... listperm){
@@ -51,10 +64,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void startService(View view) {
 
-
-    public void comenzarHuellaActivity(View view) {
-        startActivity(new Intent(this,HuellaActivity.class));
     }
     public void startLocgpsActivity(View view){
         startActivity( new Intent(this, LocgpsActivity.class));
