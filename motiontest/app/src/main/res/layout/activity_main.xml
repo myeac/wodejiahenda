@@ -10,10 +10,34 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hola3" />
+        android:textStyle="bold"
+        android:text="Test Motion"/>
+
+    <Button
+        android:id="@+id/btnService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="comenzarService"
+        android:textSize="10dp"
+        android:text="Comenzar Service"/>
+
+    <Button
+        android:id="@+id/btnRecorrido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="comenzarRecorrido"
+        android:textSize="10dp"
+        android:text="Comenzar Recorrido"/>
+
+    <Button
+        android:id="@+id/btnResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="verResultados"
+        android:textSize="10dp"
+        android:text="Resultados"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -22,12 +46,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="X: "
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:text="Estado: "/>
         <TextView
-            android:id="@+id/tvX"
+            android:id="@+id/tvEstado"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="value"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Distancia Recorrida: "/>
+        <TextView
+            android:id="@+id/tvDistancia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="value"/>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -36,26 +78,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Y: "
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:text="Tiempo: "/>
         <TextView
-            android:id="@+id/tvY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
+            android:id="@+id/tvTiempo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Z: "
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/tvZ"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="value"/>
     </LinearLayout>
+
+
+
 
 </LinearLayout>

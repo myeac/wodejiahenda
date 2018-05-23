@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onFinish() {
                 spr.stopListening();
-                tvTiempo.setText("Termino :(");
+                tvTiempo.setText("Termino");
                 btnEscuchar.setEnabled(true);
                 pbTiempo.setProgress(0);
                 Log.i(TAG,"TerminoCounter");
