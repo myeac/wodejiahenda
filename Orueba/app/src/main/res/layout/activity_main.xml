@@ -15,12 +15,6 @@
         android:layout_height="wrap_content"
         android:text="Request Permisos"/>
     <Button
-        android:id="@+id/btnHuella"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="startService"
-        android:text="Huella"/>
-    <Button
         android:id="@+id/btnLocalizacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,11 +22,18 @@
         android:text="Localizacion"/>
 
     <Button
-        android:id="@+id/btnaccelerometer"
+        android:id="@+id/btnAccelerometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="startAcelerometer"
         android:text="Accelerometer"/>
+
+    <Button
+        android:id="@+id/btnMovimiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startMovimiento"
+        android:text="Movimiento"/>
 
 
 </LinearLayout>

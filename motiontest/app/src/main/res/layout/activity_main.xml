@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:onClick="comenzarService"
         android:textSize="10dp"
-        android:text="Comenzar Service"/>
+        android:text="Iniciar Service"/>
 
     <Button
         android:id="@+id/btnRecorrido"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:onClick="comenzarRecorrido"
         android:textSize="10dp"
-        android:text="Comenzar Recorrido"/>
+        android:text="Iniciar Recorrido"/>
 
     <Button
         android:id="@+id/btnResult"

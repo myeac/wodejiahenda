@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         btnService.setTag(0);
         btnRecorrido.setTag(0);
-        mSigMotion = new SignificantMotion(this,this.tvEstado);
+        mSigMotion = new SignificantMotion(this);
     }
 
     @Override
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         valoresIniciales();
+
     }
     @Override
     protected void onResume() {
@@ -58,22 +59,24 @@ public class MainActivity extends AppCompatActivity {
         if((Integer) btnService.getTag() == 0){
             btnService.setText("Detener Service");
             btnService.setTag(1);
-            Toast.makeText(this,"Se detuvo el Servicio",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Inicio Servicio",Toast.LENGTH_SHORT).show();
         }else{
-            btnService.setText("Comenzar Service");
+            btnService.setText("Iniciar Service");
+//            btnService.setBackgroundColor(getResources().getColor());
             btnService.setTag(0);
-            Toast.makeText(this,"Inicio el Servicio",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Fin Servicio",Toast.LENGTH_SHORT).show();
+            //comienza el servicio
         }
     }
     public void comenzarRecorrido(View view) {
         if((Integer) btnRecorrido.getTag() == 0){
-            btnRecorrido.setText("Detener Recorrido");
+            btnRecorrido.setText("Fin+ Recorrido");
             btnRecorrido.setTag(1);
-            Toast.makeText(this,"Se detuvo el Recorrido",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Inicio Recorrido",Toast.LENGTH_SHORT).show();
         }else{
-            btnRecorrido.setText("Comenzar Recorrido");
+            btnRecorrido.setText("Iniciar Recorrido");
             btnRecorrido.setTag(0);
-            Toast.makeText(this,"Inicio el Recorrido",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Fin Recorrido",Toast.LENGTH_SHORT).show();
         }
     }
 

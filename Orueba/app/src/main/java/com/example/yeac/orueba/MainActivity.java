@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.yeac.orueba.Accelerometer.AccelerometerActivity;
 import com.example.yeac.orueba.Locgps.LocgpsActivity;
+import com.example.yeac.orueba.Movimiento.MoverActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void startAcelerometer(View view){
         startActivity(new Intent(this, AccelerometerActivity.class));
+    }
+    public void startMovimiento(View view){
+        startActivity(new Intent(MainActivity.this, MoverActivity.class));
     }
 }
 

@@ -12,19 +12,19 @@ public class SignificantMotion{
     SensorManager mSensorManager;
     Sensor mSigMotion;
     TriggerListener mListener;
-    TextView mTextView;
     Context mContext;
+    boolean activo;
 
-    public SignificantMotion(Context pcontext, TextView ptvestado) {
+
+    public SignificantMotion(Context pcontext) {
         this.mContext = pcontext;
-        this.mTextView = ptvestado;
     }
-    public void iniciarSigMotion() {
+    public void iniciarSigMotion(TextView ptxt) {
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         mSigMotion = mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
-        mListener = new TriggerListener(mContext, mTextView);
+        mListener = new TriggerListener(mContext, ptxt);
         if (mSigMotion == null) {
-            mTextView.setText("Sensor no disponible");
+            ptxt.setText("Sensor no disponible");
         }
     }
     class TriggerListener extends TriggerEventListener {
