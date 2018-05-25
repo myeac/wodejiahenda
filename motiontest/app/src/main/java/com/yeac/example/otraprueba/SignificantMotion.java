@@ -27,6 +27,7 @@ public class SignificantMotion{
             ptxt.setText("Sensor no disponible");
         }
     }
+
     class TriggerListener extends TriggerEventListener {
         Context context;
         TextView tvTexto;

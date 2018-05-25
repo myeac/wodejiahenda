@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context=".Locgps.LocgpsActivity">
 
     <LinearLayout
@@ -13,6 +12,35 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etMintiempo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/btnStartService"
+                android:hint="Tiempo Actualizacion (miliseg)"
+                android:inputType="number"
+                android:textSize="12dp"/>
+            <EditText
+                android:id="@+id/etMinDist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etMintiempo"
+                android:layout_toRightOf="@+id/btnStartService"
+                android:hint="Dist Actualizacion (metros)"
+                android:inputType="number"
+                android:textSize="12dp"/>
+            <Button
+                android:id="@+id/btnStartService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="comenzarServicio"
+                android:text="Start"/>
+        </RelativeLayout>
 
         <Chronometer
             android:id="@+id/chroReloj"
@@ -69,7 +97,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Velocidad actual (m/s)"
+            android:text="Velocidad actual (km/h)"
             android:textStyle="bold" />
         <TextView
             android:id="@+id/tvVelocidad"

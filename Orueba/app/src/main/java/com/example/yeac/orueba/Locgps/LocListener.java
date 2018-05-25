@@ -14,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -26,16 +27,16 @@ import java.util.Date;
 import java.util.List;
 
 public class LocListener extends Service implements LocationListener{
+    private static final String TAG = "LosListener";
 
     /* https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
-    * https://stackoverflow.com/questions/1513485/how-do-i-get-the-current-gps-location-programmatically-in-android
-    * https://www.dev2qa.com/android-update-ui-from-child-thread-example/
-    * https://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
+       https://stackoverflow.com/questions/1513485/how-do-i-get-the-current-gps-location-programmatically-in-android
+       https://www.dev2qa.com/android-update-ui-from-child-thread-example/
+       https://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
     * Accelerometer
-    *   https://examples.javacodegeeks.com/android/core/hardware/sensor/android-accelerometer-example/
-    *   https://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125
-    * */
-
+       https://examples.javacodegeeks.com/android/core/hardware/sensor/android-accelerometer-example/
+       https://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125
+     */
 
     //lcation updates: https://developer.android.com/training/location/receive-location-updates
 
@@ -47,6 +48,8 @@ public class LocListener extends Service implements LocationListener{
     List<Location> listaLocation;
     List<Float> listaDistancias;
     float distRecorrida = 0;
+    long minTime;       //en milis
+    float minDistance;  //en m
 
     //significant motion    One-shot (trigger)
     //step counter          on-change (sensorlistener)
@@ -55,6 +58,7 @@ public class LocListener extends Service implements LocationListener{
     Sensor sAcelerador, sMotion;
     SensorManager mAcelerador, mMotion;
     TriggerEventListener tlMotion;
+    Handler mUIHandler;
 
     //Binder - comunicaicon con activity
     private IBinder binder = new LocalBinder();
@@ -121,6 +125,7 @@ public class LocListener extends Service implements LocationListener{
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.i(TAG,"Thread UI");
                 tvInicio.setText(actualizarPosicion(mLocInicial));
                 tvFinal.setText(actualizarPosicion(mLocFinal));
                 tvVelocidad.setText(calcularVelocidad());
@@ -136,6 +141,10 @@ public class LocListener extends Service implements LocationListener{
         this.tvTiempo = ptiempo;
         this.tvDistancia = pdistancia;
     }
+    public void setServiceParameters(long ptime, float pdistance){
+        this.minTime = ptime;
+        this.minDistance = pdistance;
+    }
 
     //Common
     @SuppressLint("MissingPermission")
@@ -148,8 +157,8 @@ public class LocListener extends Service implements LocationListener{
         mLocMan = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
         mLocFinal = mLocMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         mLocMan.requestLocationUpdates(LocationManager.GPS_PROVIDER
-                                        ,100,1,this);   //proveedor,millis,metros,listener
-        listaLocation.add(mLocFinal);
+                                        ,minTime,minDistance,this);   //proveedor,millis,metros,listener
+            listaLocation.add(mLocFinal);
 
         //MOTION - necesita implementar un triggerlistener,
         mMotion = (SensorManager) getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
@@ -165,8 +174,14 @@ public class LocListener extends Service implements LocationListener{
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy(){
         mLocMan.removeUpdates(this);
+        distRecorrida = 0;
+        minTime = 0;
+        minDistance = 0;
+        mActivity = null;
+        listaLocation = null;
+        listaDistancias = null;
         stopSelf();
     }
 
