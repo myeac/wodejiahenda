@@ -35,5 +35,12 @@
         android:onClick="startMovimiento"
         android:text="Movimiento"/>
 
+    <Button
+        android:id="@+id/btnGiro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="detectarGiro"
+        android:text="Giro"/>
+
 
 </LinearLayout>

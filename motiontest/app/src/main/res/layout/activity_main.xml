@@ -31,12 +31,12 @@
         android:hint="Minimo Tiempo en Miliseg"
         android:inputType="number"
         android:textSize="12dp"
-        android:text="1000"/>
+        android:text="100"/>
     <EditText
         android:id="@+id/etMinDist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Minimo Distancia en Miliseg"
+        android:hint="Minimo Distancia en m"
         android:inputType="number"
         android:textSize="12dp"
         android:text="1"/>
@@ -97,18 +97,20 @@
             android:text="value"/>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvTOP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="horizontal"
-        android:fillViewport="true"
-        android:padding="10dp">
+        android:fillViewport="true">
         <TextView
             android:id="@+id/tvResultados"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"/>
-
+            android:layout_height="match_parent"/>
     </ScrollView>
 
 

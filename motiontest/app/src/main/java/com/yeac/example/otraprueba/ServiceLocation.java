@@ -198,8 +198,11 @@ public class ServiceLocation extends Service implements LocationListener{
         Log.i(TAG,"LocationChanged");
         Location nuevo = new Location(plocation);
         listaLocation.add(nuevo);
-        if(listaLocation.size() >= 2 && isUP)
+        if(listaLocation.size() >= 2 && isUP){
+            Log.i(TAG, "Acccuracy: " + String.valueOf(nuevo.getAccuracy()));
             imprimirLocation(nuevo,listaLocation.size());
+        }
+
     }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {

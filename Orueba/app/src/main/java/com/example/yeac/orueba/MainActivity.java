@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.yeac.orueba.Accelerometer.AccelerometerActivity;
+import com.example.yeac.orueba.Giro.CompassActivity;
+import com.example.yeac.orueba.Giro.GiroActivity;
 import com.example.yeac.orueba.Locgps.LocgpsActivity;
 import com.example.yeac.orueba.Movimiento.MoverActivity;
 
@@ -76,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void startMovimiento(View view){
         startActivity(new Intent(MainActivity.this, MoverActivity.class));
+    }
+    public void detectarGiro(View view){
+        startActivity(new Intent(MainActivity.this, CompassActivity.class));
     }
 }
 

@@ -4,8 +4,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tvDistancia) TextView tvDistancia;
     @BindView(R.id.tvTiempo) TextView tvTiempo;
     @BindView(R.id.tvEstado) TextView tvEstado;
+    @BindView(R.id.tvTOP) TextView tvTOP;
     @BindView(R.id.tvResultados) TextView tvResultado;
     @BindView(R.id.etMinDist) EditText etMinDist;
     @BindView(R.id.etMinTiempo) EditText etMinTiempo;
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public void valoresIniciales(){
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(this);
+        tvTOP.setText("Pos \t \t Vel(km/h) \t \t Tiempo \t \t Distancia\n");
         btnRecorrido.setTag(0);
         mSigMotion = new SignificantMotion(this);
     }
@@ -126,11 +126,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void verResultados(View view) {
-        String enviar = "Posicion       Velocidad        Tiempo        Distancia\n";
+        String enviar = "";
         for(int i = 0; i < mListaLocation.size() -1; i++){
-            enviar += "  " + i + "                         " + mListaLocation.get(i).getSpeed()
-                    + "                  " + (mListaTiempo.get(i) / 1000.00)
-                    + "               " + mListaDistancia.get(i) + "\n";
+            enviar += "  " + i + " \t \t \t \t" + (mListaLocation.get(i).getSpeed()*3600/1000)
+                    + " \t \t \t \t \t \t" + (mListaTiempo.get(i) / 1000.00)
+                    + " \t \t \t \t"+ mListaDistancia.get(i) + "\n";
         }
         tvResultado.setText(enviar);
     }
