@@ -7,11 +7,13 @@ import android.location.Location;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -30,7 +32,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity" ;
-    @BindView(R.id.btnResult) Button btnResult;
     @BindView(R.id.btnRecorrido) Button btnRecorrido;
     @BindView(R.id.tvDistancia) TextView tvDistancia;
     @BindView(R.id.tvTiempo) TextView tvTiempo;
@@ -39,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tvResultados) TextView tvResultado;
     @BindView(R.id.etMinDist) EditText etMinDist;
     @BindView(R.id.etMinTiempo) EditText etMinTiempo;
+    @BindView(R.id.svResultado) ScrollView svResult;
+    @BindView(R.id.tvVmax) TextView tvVmaxima;
+    @BindView(R.id.tvAmax) TextView tvAmaxima;
+    @BindView(R.id.tvFreno) TextView tvUsoFreno;
 
     SignificantMotion mSigMotion;
 
@@ -54,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
     public void valoresIniciales(){
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(this);
-        tvTOP.setText("Pos \t \t Vel(km/h) \t \t Tiempo \t \t Distancia\n");
+        tvTOP.setText("\t Pos \t \t Vel(km/h) \t \t Tiempo \t \t Distancia\n");
         btnRecorrido.setTag(0);
+        tvResultado.setMovementMethod(new ScrollingMovementMethod());
         mSigMotion = new SignificantMotion(this);
     }
     public void iniciarService(){
@@ -68,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 mService.setLocListener(Long.valueOf(etMinTiempo.getText().toString())
                                         ,Float.valueOf(etMinDist.getText().toString()));
                 mService.iniciarLocationService();
+                mService.setTexvViewResult(tvResultado,svResult);
+                mService.setTextViewMotionValues(tvVmaxima,tvAmaxima,tvUsoFreno);
             }
             @Override
             public void onServiceDisconnected(ComponentName name) {
@@ -78,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void terminarservice(){
         mService.terminarLocationService();
-        mListaLocation = mService.getListaLocation();
-        mListaDistancia = mService.getListaDistancias();
-        mListaTiempo = mService.getListaTiempo();
+//        mListaLocation = mService.getListaLocation();
+//        mListaDistancia = mService.getListaDistancias();
+//        mListaTiempo = mService.getListaTiempo();
         tvDistancia.setText(String.valueOf(mService.recorridoTotal()));
         tvTiempo.setText(mService.calcularTiempo());
         Log.i(TAG,"Recorrido Total: " + mService.recorridoTotal());
@@ -125,14 +133,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void verResultados(View view) {
-        String enviar = "";
-        for(int i = 0; i < mListaLocation.size() -1; i++){
-            enviar += "  " + i + " \t \t \t \t" + (mListaLocation.get(i).getSpeed()*3600/1000)
-                    + " \t \t \t \t \t \t" + (mListaTiempo.get(i) / 1000.00)
-                    + " \t \t \t \t"+ mListaDistancia.get(i) + "\n";
-        }
-        tvResultado.setText(enviar);
-    }
 }
 

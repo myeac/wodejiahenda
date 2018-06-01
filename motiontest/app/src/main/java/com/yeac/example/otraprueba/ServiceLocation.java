@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,6 +36,13 @@ public class ServiceLocation extends Service implements LocationListener{
     float minDistancia;
     long minTiempo;
     boolean isUP;
+    TextView tvResultado, tvVelMaxima, tvAcMaxima, tvFreFuert;
+    ScrollView scrollView;
+    String strResultado;
+
+//Valores Maximos
+    Location vMaxima;
+    float aMaxima;
 
 //Datos a guardar
     List<Location> listaLocation;
@@ -49,6 +57,17 @@ public class ServiceLocation extends Service implements LocationListener{
     public void setmActivity(Activity pactivity){
         this.mActivity = pactivity;
     }
+    public void setTexvViewResult(TextView ptv, ScrollView psv){
+        this.tvResultado = ptv;
+        this.scrollView = psv;
+    }
+    public void setTextViewMotionValues(TextView pVel, TextView pAc, TextView pFreno){
+        this.tvVelMaxima = pVel;
+        this.tvAcMaxima = pAc;
+        this.tvFreFuert = pFreno;
+    }
+    public float getvMaxima(){return vMaxima.getSpeed();}
+    public float getaMaxima(){return aMaxima;}
     public List<Location> getListaLocation(){
         return  this.listaLocation;
     }
@@ -58,6 +77,8 @@ public class ServiceLocation extends Service implements LocationListener{
     public List<Long> getListaTiempo(){
         return  this.listaTiempo;
     }
+
+//Imprimir resultados
 
     @SuppressLint("MissingPermission")
     public void iniciarLocationService(){
@@ -98,11 +119,31 @@ public class ServiceLocation extends Service implements LocationListener{
         }
     };
 
+//velocidad y aceleracion
+    public void setVelMaxima(Location p){
+        if(p.getSpeed() > vMaxima.getSpeed()){
+            vMaxima = p;
+            tvVelMaxima.setText(String.valueOf(vMaxima.getSpeed()));
+        }
+    }
+
+
 //UI
     public void imprimirLocation(Location p, int pos){
         System.out.println(pos + ": " + p.getSpeed() + " " + p.getLatitude() + " " + p.getLongitude());
+        setVelMaxima(p);
         distanciaEntrePuntos();
         tiempoEntrePuntos();
+        updateTableResult(p,pos);
+    }
+    public void updateTableResult(Location p, int ppos){
+        int pos = ppos - 1;
+        strResultado    += " \t " + pos
+                        + " \t \t \t \t" + (p.getSpeed()*3600/1000)
+                        + " \t \t \t \t \t \t" + ( listaTiempo.get(pos) / 1000.00)
+                        + " \t \t \t \t"+ listaDistancias.get(pos) + "\n";
+        tvResultado.setText(strResultado);
+        scrollView.scrollTo(0, tvResultado.getBottom());
     }
 
 //Distancia
@@ -161,6 +202,9 @@ public class ServiceLocation extends Service implements LocationListener{
         listaDistancias = new ArrayList<>();
         listaLocation = new ArrayList<>();
         listaTiempo = new ArrayList<>();
+        listaDistancias.add((float) 0000.00);
+        listaTiempo.add((long) 0);
+        strResultado = "";
     }
 
 //Binder
@@ -201,7 +245,9 @@ public class ServiceLocation extends Service implements LocationListener{
         if(listaLocation.size() >= 2 && isUP){
             Log.i(TAG, "Acccuracy: " + String.valueOf(nuevo.getAccuracy()));
             imprimirLocation(nuevo,listaLocation.size());
+
         }
+
 
     }
     @Override

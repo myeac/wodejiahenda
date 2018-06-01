@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
     //https://dev.to/adammc331/android-fingerprint-authentication-tutorial-2835
 
     override fun onCreate(savedInstanceState: Bundle?) {

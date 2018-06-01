@@ -20,6 +20,7 @@ import android.widget.TextView
 class FingerprintController(
 
         //https://github.com/androidessence/FingerprintDialogSample
+        //tipo - variable - nombre - objeto
         private val fingerprintManager: FingerprintManagerCompat,
         private val callback: Callback,
         private val title: TextView,
