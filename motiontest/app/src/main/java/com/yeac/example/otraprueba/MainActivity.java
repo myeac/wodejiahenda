@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public void valoresIniciales(){
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(this);
-        tvTOP.setText("\t Pos \t \t Vel(km/h) \t \t Tiempo \t \t Distancia\n");
+        tvTOP.setText("\t Pos \t \t Vel(km/h) \t \t Tiempo \t \t Distancia");
         btnRecorrido.setTag(0);
         tvResultado.setMovementMethod(new ScrollingMovementMethod());
         mSigMotion = new SignificantMotion(this);
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onServiceDisconnected(ComponentName name) {
+                Log.i(TAG,"Desconectado");
             }
         };
         bindService(mIntentServ,mServConn,BIND_AUTO_CREATE);

@@ -19,11 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ServiceLocation extends Service implements LocationListener{
 
@@ -45,6 +41,8 @@ public class ServiceLocation extends Service implements LocationListener{
     float aMaxima;
 
 //Datos a guardar
+    List<Posiciones> listaPos;
+
     List<Location> listaLocation;
     List<Float> listaDistancias;
     List<Long> listaTiempo;
@@ -154,7 +152,7 @@ public class ServiceLocation extends Service implements LocationListener{
         Location.distanceBetween(inicio.getLatitude(),inicio.getLongitude()
                                 ,fin.getLatitude(),fin.getLongitude()
                                 ,result);
-        Log.i(TAG,"distancia: " + String.valueOf(result[0]));
+        Log.i(TAG,"distanciaDif: " + String.valueOf(result[0]));
         listaDistancias.add(result[0]);
     }
     public float recorridoTotal(){
@@ -199,6 +197,7 @@ public class ServiceLocation extends Service implements LocationListener{
 
 //General
     public void valoresGenerales(){
+        listaPos = new ArrayList<>();
         listaDistancias = new ArrayList<>();
         listaLocation = new ArrayList<>();
         listaTiempo = new ArrayList<>();
@@ -236,16 +235,77 @@ public class ServiceLocation extends Service implements LocationListener{
         super.onDestroy();
     }
 
+
+    public long timeDif(Location actual){
+        long fin = actual.getTime();
+        long inicio = listaPos.get(listaPos.size() - 1).getLocation().getTime();
+        return  inicio - fin;
+    }
+    public float posDif(Location fin){
+        float result[] = new float[1];
+        Location init = listaPos.get(listaPos.size() - 1).getLocation();
+        Location.distanceBetween(init.getLatitude(),init.getLongitude(),
+                                fin.getLatitude(),fin.getLongitude(),
+                                result);
+        return  result[0];
+    }
+    public String parseoTiempo(long tDif){
+        long secEmilli = 1000;
+        long minEmilli = secEmilli * 60;
+        long horEmilli = minEmilli * 60;
+        long diaEmilli = horEmilli * 24;
+
+        long dias = tDif/ diaEmilli; tDif = tDif % diaEmilli;
+        long horas = tDif/ horEmilli; tDif = tDif % horEmilli;
+        long minutos = tDif/ minEmilli; tDif = tDif % minEmilli;
+        long segundos = tDif/ secEmilli;
+
+        if(dias == 0)
+            return horas +  " H " + minutos +  " m " + segundos + " s";
+        else
+            return dias + " d " + horas +  " H " + minutos +  " m " + segundos + " s";
+    }
+    public String getTotalTime(){
+        long enviar = 0;
+        for(Posiciones x : listaPos){
+            enviar += x.getTiempoDif();
+        }
+        return parseoTiempo(enviar);
+    }
+    public String getTotalDist(){
+        float enviar = 0;
+        for(Posiciones x : listaPos){
+            enviar += x.getDistanciaDif();
+        }
+        return String.valueOf(enviar);
+    }
+
 //LocationListener
     @Override
     public void onLocationChanged(Location plocation){
         Log.i(TAG,"LocationChanged");
+        Posiciones enviar = new Posiciones(plocation);
+        if(listaPos.isEmpty()){
+            enviar.setTiempoDif(0);
+            enviar.setDistanciaDif(0);
+            enviar.setAceleracion(0);
+            enviar.setStatus("pos inicial");
+            listaPos.add(enviar);
+        }else {
+            enviar.setTiempoDif(timeDif(plocation));
+            enviar.setDistanciaDif(posDif(plocation));
+            enviar.setAceleracion(0);
+            enviar.setStatus("por definir");
+            listaPos.add(enviar);
+        }
+
+
+//--------
         Location nuevo = new Location(plocation);
         listaLocation.add(nuevo);
         if(listaLocation.size() >= 2 && isUP){
             Log.i(TAG, "Acccuracy: " + String.valueOf(nuevo.getAccuracy()));
             imprimirLocation(nuevo,listaLocation.size());
-
         }
 
 
