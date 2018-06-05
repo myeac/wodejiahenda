@@ -11,7 +11,7 @@ public class Posiciones {
     public float distanciaDif;
     public float aceleracion;
     public String status;
-    public long tiempoDif;
+    public float tiempoDif;
 
     public Posiciones(Location p){
         this.location = p;
@@ -40,10 +40,10 @@ public class Posiciones {
     public void setStatus(String status) {
         this.status = status;
     }
-    public long getTiempoDif() {
+    public float getTiempoDif() {
         return tiempoDif;
     }
-    public void setTiempoDif(long tiempoDif) {
+    public void setTiempoDif(float tiempoDif) {
         this.tiempoDif = tiempoDif;
     }
     public void setLocation(Location location) {

@@ -1,10 +1,15 @@
 package com.yeac.example.otraprueba;
 
+import android.Manifest;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -15,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -46,14 +52,32 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tvFreno) TextView tvUsoFreno;
 
     SignificantMotion mSigMotion;
-
     Intent mIntentServ;
     ServiceConnection mServConn;
     ServiceLocation mService;
+    int PERMISSION_CODE = 10;
 
-    List<Location> mListaLocation;
-    List<Long> mListaTiempo;
-    List<Float> mListaDistancia;
+    public static String[] listPermisos = new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.INTERNET,
+            Manifest.permission.BODY_SENSORS};
+
+    public void comenzarRecorrido(View view) {
+        if((int) btnRecorrido.getTag() == 0){
+            btnRecorrido.setText("Fin Recorrido");
+            btnRecorrido.setTag(1);
+            etMinDist.setEnabled(false);
+            etMinTiempo.setEnabled(false);
+            iniciarService();
+        }else{
+            btnRecorrido.setText("Iniciar Recorrido");
+            btnRecorrido.setTag(0);
+            etMinDist.setEnabled(true);
+            etMinTiempo.setEnabled(true);
+            terminarservice();
+        }
+    }
 
 //datos service:
     public void valoresIniciales(){
@@ -90,9 +114,8 @@ public class MainActivity extends AppCompatActivity {
 //        mListaLocation = mService.getListaLocation();
 //        mListaDistancia = mService.getListaDistancias();
 //        mListaTiempo = mService.getListaTiempo();
-        tvDistancia.setText(String.valueOf(mService.recorridoTotal()));
-        tvTiempo.setText(mService.calcularTiempo());
-        Log.i(TAG,"Recorrido Total: " + mService.recorridoTotal());
+        tvDistancia.setText(mService.getTotalDist());
+        tvTiempo.setText(mService.getTotalTime());
         stopService(mIntentServ);
         mIntentServ = null;
         mService = null;
@@ -100,15 +123,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 //UI
-    public void actualizarUI(){
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(!hasPermission(this,listPermisos)){
+            ActivityCompat.requestPermissions(this,listPermisos,PERMISSION_CODE);
+        }
+
         valoresIniciales();
     }
+
+    public boolean hasPermission(Context context, String... listp){
+        if(context != null && listp != null){
+            for(String permiso: listp){
+                if(ActivityCompat.checkSelfPermission(context,permiso) != PackageManager.PERMISSION_GRANTED)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(!hasPermission(this,listPermisos))
+            Toast.makeText(this,"Aun falta test",Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -116,22 +159,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    public void comenzarRecorrido(View view) {
-        if((int) btnRecorrido.getTag() == 0){
-            btnRecorrido.setText("Fin Recorrido");
-            btnRecorrido.setTag(1);
-            etMinDist.setEnabled(false);
-            etMinTiempo.setEnabled(false);
-            iniciarService();
-        }else{
-            btnRecorrido.setText("Iniciar Recorrido");
-            btnRecorrido.setTag(0);
-            etMinDist.setEnabled(true);
-            etMinTiempo.setEnabled(true);
-            terminarservice();
-        }
     }
 
 }

@@ -28,24 +28,20 @@ public class ServiceLocation extends Service implements LocationListener{
     Activity mActivity;
     Location mLocation;
     LocationManager mLocationManager;
-    float mDistanciaRecorrida;
     float minDistancia;
     long minTiempo;
     boolean isUP;
+
     TextView tvResultado, tvVelMaxima, tvAcMaxima, tvFreFuert;
     ScrollView scrollView;
     String strResultado;
 
 //Valores Maximos
-    Location vMaxima;
-    float aMaxima;
+    float vMaxima, aMaxima, aFreno;
 
 //Datos a guardar
     List<Posiciones> listaPos;
-
-    List<Location> listaLocation;
-    List<Float> listaDistancias;
-    List<Long> listaTiempo;
+    int listaTamano;
 
 //setters del Service
     public void setLocListener(long ptiempo, float pdistancia){
@@ -64,20 +60,8 @@ public class ServiceLocation extends Service implements LocationListener{
         this.tvAcMaxima = pAc;
         this.tvFreFuert = pFreno;
     }
-    public float getvMaxima(){return vMaxima.getSpeed();}
-    public float getaMaxima(){return aMaxima;}
-    public List<Location> getListaLocation(){
-        return  this.listaLocation;
-    }
-    public List<Float> getListaDistancias(){
-        return  this.listaDistancias;
-    }
-    public List<Long> getListaTiempo(){
-        return  this.listaTiempo;
-    }
 
-//Imprimir resultados
-
+//EventosListener
     @SuppressLint("MissingPermission")
     public void iniciarLocationService(){
         isUP = true;
@@ -93,7 +77,6 @@ public class ServiceLocation extends Service implements LocationListener{
         isUP = false;
         stopSelf();
     }
-
     SensorEventListener selAccelerometer = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -117,93 +100,14 @@ public class ServiceLocation extends Service implements LocationListener{
         }
     };
 
-//velocidad y aceleracion
-    public void setVelMaxima(Location p){
-        if(p.getSpeed() > vMaxima.getSpeed()){
-            vMaxima = p;
-            tvVelMaxima.setText(String.valueOf(vMaxima.getSpeed()));
-        }
-    }
-
-
-//UI
-    public void imprimirLocation(Location p, int pos){
-        System.out.println(pos + ": " + p.getSpeed() + " " + p.getLatitude() + " " + p.getLongitude());
-        setVelMaxima(p);
-        distanciaEntrePuntos();
-        tiempoEntrePuntos();
-        updateTableResult(p,pos);
-    }
-    public void updateTableResult(Location p, int ppos){
-        int pos = ppos - 1;
-        strResultado    += " \t " + pos
-                        + " \t \t \t \t" + (p.getSpeed()*3600/1000)
-                        + " \t \t \t \t \t \t" + ( listaTiempo.get(pos) / 1000.00)
-                        + " \t \t \t \t"+ listaDistancias.get(pos) + "\n";
-        tvResultado.setText(strResultado);
-        scrollView.scrollTo(0, tvResultado.getBottom());
-    }
-
-//Distancia
-    public void distanciaEntrePuntos(){
-        Location inicio = listaLocation.get(listaLocation.size() - 2);
-        Location fin = listaLocation.get(listaLocation.size() - 1);
-        float result[] = new float[1];
-        Location.distanceBetween(inicio.getLatitude(),inicio.getLongitude()
-                                ,fin.getLatitude(),fin.getLongitude()
-                                ,result);
-        Log.i(TAG,"distanciaDif: " + String.valueOf(result[0]));
-        listaDistancias.add(result[0]);
-    }
-    public float recorridoTotal(){
-        float enviar = 0;
-        for(float x : listaDistancias){
-            enviar += x;
-        }
-        return enviar;
-    }
-
-//Tiempo
-    public void tiempoEntrePuntos(){
-        long inicio = listaLocation.get(listaLocation.size() - 2).getTime();
-        long fin = listaLocation.get(listaLocation.size() - 1).getTime();
-        long dif = fin - inicio;
-        listaTiempo.add(dif);
-    }
-    public long sumaTiempos(){
-        long enviar = 0;
-        for(long x : listaTiempo)
-            enviar +=x;
-        return enviar;
-    }
-    public String calcularTiempo(){
-        long total = sumaTiempos();
-
-        long secEmilli = 1000;
-        long minEmilli = secEmilli * 60;
-        long horEmilli = minEmilli * 60;
-        long diaEmilli = horEmilli * 24;
-
-        long dias = total/ diaEmilli; total = total % diaEmilli;
-        long horas = total/ horEmilli; total = total % horEmilli;
-        long minutos = total/ minEmilli; total = total % minEmilli;
-        long segundos = total/ secEmilli;
-
-        if(dias == 0)
-            return horas +  " H " + minutos +  " m " + segundos + " s";
-        else
-            return dias + " d " + horas +  " H " + minutos +  " m " + segundos + " s";
-    }
-
 //General
     public void valoresGenerales(){
         listaPos = new ArrayList<>();
-        listaDistancias = new ArrayList<>();
-        listaLocation = new ArrayList<>();
-        listaTiempo = new ArrayList<>();
-        listaDistancias.add((float) 0000.00);
-        listaTiempo.add((long) 0);
         strResultado = "";
+        listaTamano = 0;
+        vMaxima = 0;
+        aMaxima = 0;
+        aFreno = 0;
     }
 
 //Binder
@@ -235,19 +139,25 @@ public class ServiceLocation extends Service implements LocationListener{
         super.onDestroy();
     }
 
-
-    public long timeDif(Location actual){
+    public float timeDif(Location actual){
         long fin = actual.getTime();
-        long inicio = listaPos.get(listaPos.size() - 1).getLocation().getTime();
-        return  inicio - fin;
+        long inicio = listaPos.get(listaTamano - 1).getLocation().getTime();
+        return  (float)(fin - inicio)/1000;
     }
     public float posDif(Location fin){
         float result[] = new float[1];
-        Location init = listaPos.get(listaPos.size() - 1).getLocation();
+        Location init = listaPos.get(listaTamano - 1).getLocation();
         Location.distanceBetween(init.getLatitude(),init.getLongitude(),
                                 fin.getLatitude(),fin.getLongitude(),
                                 result);
         return  result[0];
+    }
+    public float accDif(Posiciones fin){
+        float acc = 0;
+        Posiciones ini = listaPos.get(listaTamano - 1);
+        float difVel = fin.getLocation().getSpeed() - ini.getLocation().getSpeed();
+        acc = difVel / (fin.getTiempoDif());
+        return  acc;
     }
     public String parseoTiempo(long tDif){
         long secEmilli = 1000;
@@ -268,7 +178,7 @@ public class ServiceLocation extends Service implements LocationListener{
     public String getTotalTime(){
         long enviar = 0;
         for(Posiciones x : listaPos){
-            enviar += x.getTiempoDif();
+            enviar += (x.getTiempoDif()*1000);
         }
         return parseoTiempo(enviar);
     }
@@ -279,7 +189,25 @@ public class ServiceLocation extends Service implements LocationListener{
         }
         return String.valueOf(enviar);
     }
-
+    public void checkMaxSpeed(Location actual){
+        vMaxima = (actual.getSpeed() > vMaxima) ? actual.getSpeed() : vMaxima;
+        tvVelMaxima.setText(String.valueOf(vMaxima));
+    }
+    public void checkMaxMinAcceleration(Posiciones actual){
+        aMaxima = (actual.getAceleracion() > aMaxima) ? actual.getAceleracion() : aMaxima;
+        tvAcMaxima.setText(String.valueOf(aMaxima));
+        aFreno = (actual.getAceleracion() < aFreno) ? actual.getAceleracion() : aFreno;
+        tvFreFuert.setText(String.valueOf(aFreno));
+    }
+    public void updateTableResult(Posiciones p, int ppos){
+        int pos = ppos - 1;
+        strResultado    += " \t " + pos
+                + " \t \t \t \t" + (p.getLocation().getSpeed()*(3600/1000)) //eb metros
+                + " \t \t \t \t \t \t" + (p.getTiempoDif())                 //en seg
+                + " \t \t \t \t"+ (p.getDistanciaDif()) + "\n";
+        tvResultado.setText(strResultado);
+        scrollView.scrollTo(0, tvResultado.getBottom());
+    }
 //LocationListener
     @Override
     public void onLocationChanged(Location plocation){
@@ -291,24 +219,18 @@ public class ServiceLocation extends Service implements LocationListener{
             enviar.setAceleracion(0);
             enviar.setStatus("pos inicial");
             listaPos.add(enviar);
+            listaTamano = listaPos.size();
         }else {
             enviar.setTiempoDif(timeDif(plocation));
             enviar.setDistanciaDif(posDif(plocation));
-            enviar.setAceleracion(0);
+            enviar.setAceleracion(accDif(enviar));
             enviar.setStatus("por definir");
+            checkMaxSpeed(plocation);
+            checkMaxMinAcceleration(enviar);
             listaPos.add(enviar);
+            listaTamano = listaPos.size();
+            updateTableResult(enviar,listaTamano);
         }
-
-
-//--------
-        Location nuevo = new Location(plocation);
-        listaLocation.add(nuevo);
-        if(listaLocation.size() >= 2 && isUP){
-            Log.i(TAG, "Acccuracy: " + String.valueOf(nuevo.getAccuracy()));
-            imprimirLocation(nuevo,listaLocation.size());
-        }
-
-
     }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
